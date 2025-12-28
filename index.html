@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Incident Reporting App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h2 {
+      color: red;
+      text-align: center;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    button {
+      background: red;
+      color: white;
+      border: none;
+      font-size: 16px;
+    }
+    .card {
+      background: white;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Incident Reporting App</h2>
+
+<select id="type">
+  <option>Accident</option>
+  <option>Fire</option>
+  <option>Medical</option>
+</select>
+
+<input type="text" id="description" placeholder="Incident Description">
+
+<button onclick="saveIncident()">Submit Incident</button>
+
+<h3>Reported Incidents</h3>
+<div id="list"></div>
+
+<script>
+  function saveIncident() {
+    const type = document.getElementById("type").value;
+    const description = document.getElementById("description").value;
+
+    if (description === "") {
+      alert("Please enter description");
+      return;
+    }
+
+    const incident = {
+      type: type,
+      description: description,
+      status: "Open",
+      time: new Date().toLocaleString()
+    };
+
+    let incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+    incidents.push(incident);
+    localStorage.setItem("incidents", JSON.stringify(incidents));
+
+    document.getElementById("description").value = "";
+    showIncidents();
+  }
+
+  function showIncidents() {
+    let incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+    let html = "";
+
+    incidents.forEach((i) => {
+      html += `
+        <div class="card">
+          <b>${i.type}</b><br>
+          ${i.description}<br>
+          Status: ${i.status}<br>
+          Time: ${i.time}
+        </div>
+      `;
+    });
+
+    document.getElementById("list").innerHTML = html;
+  }
+
+  showIncidents();
+</script>
+
+</body>
+</html>
